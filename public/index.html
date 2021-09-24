@@ -1,0 +1,121 @@
+<html>
+	<head>
+		<title>vírus!</title>
+
+		<style></style>
+		<script src="/socket.io/socket.io.js"></script>
+	</head>
+	<body>
+		<form id="searchProduct">
+			<input id="search_product_id" placeholder="Id do produto">
+			<input id="search_product_name" placeholder="Nome do produto">
+			<button>Pesquisar</button>
+		</form>
+		
+		<form id="addProduct">
+			<input id="add_product_name" placeholder="Nome do produto">
+			<input id="add_product_category" placeholder="Categoria do produto">
+			<button>Adicionar</button>
+		</form>
+
+		<form id="rmProduct">
+			<input id="rm_product_id" placeholder="Id do produto">
+			<button>Remover</button>
+		</form>
+		<script>
+			const socket = io();
+
+			let searchForm = document.getElementById('searchProduct');
+			searchForm.addEventListener('submit', (e) => {
+				e.preventDefault();
+				const product_id = document.getElementById('search_product_id');
+				const product_name = document.getElementById('search_product_name');
+
+				let type = undefined;
+				let value = undefined;
+
+				if(product_id.value != ''){
+					console.log(product_id.value);
+					type = 'prod_id';
+					value = product_id.value;
+				}
+				else if(product_name.value != ''){
+					console.log(product_name.value);
+					type = 'prod_name';
+					value = product_name.value;
+				}
+
+				if(type && value){
+					socket.emit('searchProduct', type, value);
+				}
+				product_id.value = '';
+				product_name.value = '';
+			});
+
+			let addForm = document.getElementById('addProduct');
+			addForm.addEventListener('submit', (e) => {
+				e.preventDefault();
+				const product_name = document.getElementById('add_product_name');
+				const product_category = document.getElementById('add_product_category');
+
+				if(product_category.value != '' && product_name.value != ''){
+					let prod_name = product_name.value;
+					let prod_cat = product_category.value;
+
+					console.log(product_category.value);
+					console.log(product_name.value);
+
+					socket.emit('addProduct', prod_name, prod_cat); 
+
+//					alert("Produto adicionado com sucesso!");
+				}
+				
+				product_category.value = '';
+				product_name.value = '';
+			});
+
+			let rmForm = document.getElementById('rmProduct');
+			rmForm.addEventListener('submit', (e) => {
+				e.preventDefault();
+				const product_id = document.getElementById('rm_product_id');
+
+				if(product_id.value != ''){
+					let prod_id = product_id.value;
+
+					console.log(prod_id);
+					socket.emit('rmProduct', prod_id);
+				}
+
+				product_id.value = '';
+			});
+
+			socket.on('searchFound', (rows) =>{
+				alert(`Achei ${rows.length} itens!`);
+				console.log(rows);
+			});
+
+			socket.on('searchError', (err) => {
+				alert('Erro!');
+				console.log(err);
+			});
+
+			socket.on('addRes', () => {
+				alert('Item adicionado com sucesso!');
+			});
+
+			socket.on('addError', (err) => {
+				alert('Error: ', err);
+				console.log(err);
+			});
+
+			socket.on('rmRes', () => {
+				alert('Item removido com sucesso!');
+			});
+
+			socket.on('rmError', (err) => {
+				alert('Erro na hora de remover o item!');
+				console.log(err);
+			});
+		</script>
+	</body>
+</html>
