@@ -2,16 +2,32 @@
 	<head>
 		<title>vírus!</title>
 
-		<style></style>
+		<style>
+			table {
+				align-items: center;
+				border-collapse: collapse;
+			}
+
+			td, th {
+				border: 2px solid #000;
+				text-align: center;
+				padding: 9px;
+			}
+
+			#searchTable {
+				display: none;
+			}
+		</style>
 		<script src="/socket.io/socket.io.js"></script>
 	</head>
 	<body>
 		<form id="searchProduct">
 			<input id="search_product_id" placeholder="Id do produto">
 			<input id="search_product_name" placeholder="Nome do produto">
+			<input id="search_product_category" placeholder="Categoria do produto">
 			<button>Pesquisar</button>
 		</form>
-		
+
 		<form id="addProduct">
 			<input id="add_product_name" placeholder="Nome do produto">
 			<input id="add_product_category" placeholder="Categoria do produto">
@@ -22,6 +38,9 @@
 			<input id="rm_product_id" placeholder="Id do produto">
 			<button>Remover</button>
 		</form>
+
+		<table id="searchTable"></table>
+
 		<script>
 			const socket = io();
 
@@ -30,26 +49,34 @@
 				e.preventDefault();
 				const product_id = document.getElementById('search_product_id');
 				const product_name = document.getElementById('search_product_name');
+				const product_cat = document.getElementById('search_product_category');
 
 				let type = undefined;
 				let value = undefined;
 
-				if(product_id.value != ''){
+				if(product_id.value !== ''){
 					console.log(product_id.value);
 					type = 'prod_id';
 					value = product_id.value;
 				}
-				else if(product_name.value != ''){
+				else if(product_name.value !== ''){
 					console.log(product_name.value);
 					type = 'prod_name';
 					value = product_name.value;
 				}
+				else if(product_cat.value !== ''){
+					type = 'prod_cat';
+					value = product_cat.value;
+				}
 
 				if(type && value){
-					socket.emit('searchProduct', type, value);
+					socket.emit('searchProduct', type, value.trim());
 				}
 				product_id.value = '';
 				product_name.value = '';
+				product_cat.value = '';
+
+				document.getElementById('searchTable').display = 'none';
 			});
 
 			let addForm = document.getElementById('addProduct');
@@ -65,13 +92,14 @@
 					console.log(product_category.value);
 					console.log(product_name.value);
 
-					socket.emit('addProduct', prod_name, prod_cat); 
+					socket.emit('addProduct', prod_name.trim(), prod_cat.trim()); 
 
 //					alert("Produto adicionado com sucesso!");
 				}
 				
 				product_category.value = '';
 				product_name.value = '';
+				document.getElementById('searchTable').display = 'none';
 			});
 
 			let rmForm = document.getElementById('rmProduct');
@@ -83,15 +111,38 @@
 					let prod_id = product_id.value;
 
 					console.log(prod_id);
-					socket.emit('rmProduct', prod_id);
+					socket.emit('rmProduct', prod_id.trim());
 				}
 
 				product_id.value = '';
+				document.getElementById('searchTable').display = 'none';
 			});
+
+			function createTable(products){
+
+				if(products.length === 0){
+					return;
+				}
+
+				let sTable = document.getElementById('searchTable');
+				sTable.style.display = 'inline';
+				
+				let tableContent = '<tr><td>Id</td><td>Nome do produto</td><td>Categoria</td></tr>';
+
+				for(const currentProduct of products){
+					const { prod_id, prod_name, prod_cat } = currentProduct;
+					tableContent += '<tr>';
+					tableContent += `<td>${prod_id}</td><td>${prod_name}</td><td>${prod_cat}</td>`;
+					tableContent += '</tr>';
+				}
+
+				sTable.innerHTML = tableContent;
+			}
 
 			socket.on('searchFound', (rows) =>{
 				alert(`Achei ${rows.length} itens!`);
 				console.log(rows);
+				createTable(rows);
 			});
 
 			socket.on('searchError', (err) => {
