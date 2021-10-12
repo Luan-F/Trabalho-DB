@@ -13,6 +13,27 @@ const db = require('./db.js');
 app.use(express.static('public'));
 
 sockets.on('connection', socket => {
+
+	db.getAll('produtos', (err, res) => {
+		if(err){
+			console.log(err);
+		}
+		else{
+			socket.emit('findAll', res.rows);
+		}
+	});
+
+	socket.on('searchAll', () => {
+		db.getAllT((err, res) => {
+			if(err){
+				console.log(err);
+			}
+			else{
+				socket.emit('findAllDet', res.rows);
+			}
+		});
+	});
+
 	socket.on('searchProduct', (type, value) => {
 		value = value.toLowerCase();
 		db.getProduct(type, value, (err, res) => {

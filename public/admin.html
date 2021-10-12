@@ -1,0 +1,80 @@
+<html>
+	<head>
+		<title>Admin</title>
+		<style>
+			div.container {
+				display: flex;
+				align-itens: center;
+				justify-content: space-around;
+			}
+
+			input {
+				margin: 5px;
+			}
+
+			button {
+				margin: 5px;
+			}
+			
+			body {
+				font-color: blue;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<form id="add">
+				<center>
+					Adicionar um produto
+				</center>
+				<input placeholder="Nome">	<br>
+				<input placeholder="Categoria">	<br>
+				<input placeholder="Custo">	<br>
+				<input placeholder="Quantidade"><br>
+				<center>
+					<button>Adicionar</button>
+				</center>
+			</form>
+		</div>
+		<div class="container">
+			<form id="search">
+				<center>
+					Procurar produto ou categoria
+				</center>
+				<input placeholder="Id">	<br>
+				<input placeholder="Categoria">	<br>
+				<center>
+					<button>Procurar</button>
+				</center>
+			</form>
+		</div>
+		<div class="container">
+			<form id="remove">
+				<center>
+					Remover um produto
+				</center>
+				<input placeholder="Id"> 	<br>
+				<center>
+					<button>Remover</button>
+				</center>
+			</form>
+		</div>
+		<div class="container">
+			<form id="update">
+				<center>
+					Atualiza o produto
+				</center>
+				<input placeholder="Id">	<br>
+				<input placeholder="Categoria">	<br>
+				<input placeholder="Cuso">	<br>
+				<input placeholder="Quantidade"><br>
+				<center>
+					<button>Atualizar</button>
+				</center>
+			</form>
+		</div>
+		<script>
+		</script>
+	</body>
+</html>
