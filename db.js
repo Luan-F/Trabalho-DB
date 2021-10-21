@@ -9,15 +9,6 @@ const client = new Client({
 
 client.connect();
 
-//client.query('SELECT * FROM teste;', (err, res) => {
-//	if(err){
-//		console.log(err);
-//	}
-//	else{
-//		console.log(res.rows);
-//	}
-//});
-
 function getAllT(callback){
 	client.query('SELECT * FROM produtos p1 JOIN precos p2 USING(prod_id) JOIN estoque e1 USING(prod_id);', 
 		(err, res) => {
@@ -34,8 +25,6 @@ function getAll(tableName, callback){
 }
 
 function getProduct(type, value, callback){
-//	console.log('type and value: ', type, value);
-
 	client.query(`SELECT * FROM produtos WHERE ${type}=$1`,
 		[value],	
 		(err, res) => {
