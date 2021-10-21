@@ -9,14 +9,14 @@ const client = new Client({
 
 client.connect();
 
-client.query('SELECT * FROM teste;', (err, res) => {
-	if(err){
-		console.log(err);
-	}
-	else{
-		console.log(res.rows);
-	}
-});
+//client.query('SELECT * FROM teste;', (err, res) => {
+//	if(err){
+//		console.log(err);
+//	}
+//	else{
+//		console.log(res.rows);
+//	}
+//});
 
 function getAllT(callback){
 	client.query('SELECT * FROM produtos p1 JOIN precos p2 USING(prod_id) JOIN estoque e1 USING(prod_id);', 
@@ -26,8 +26,6 @@ function getAllT(callback){
 }
 
 function getAll(tableName, callback){
-	console.log('Table:', tableName);
-
 	client.query(`SELECT * FROM ${tableName};`,
 		(err, res) => {
 			callback(err, res);

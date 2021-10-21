@@ -54,35 +54,6 @@
 					rows
 				);
 			});
-
-			socket.on('searchFound', (rows) =>{
-				alert(`Achei ${rows.length} itens!`);
-				console.log(rows);
-				createTable(rows);
-			});
-
-			socket.on('searchError', (err) => {
-				alert('Erro!');
-				console.log(err);
-			});
-
-			socket.on('addRes', () => {
-				alert('Item adicionado com sucesso!');
-			});
-
-			socket.on('addError', (err) => {
-				alert('Error: ', err);
-				console.log(err);
-			});
-
-			socket.on('rmRes', () => {
-				alert('Item removido com sucesso!');
-			});
-
-			socket.on('rmError', (err) => {
-				alert('Erro na hora de remover o item!');
-				console.log(err);
-			});
 		</script>
 	</body>
 </html>
